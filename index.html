@@ -451,9 +451,9 @@ function buildProg(){
 }
 function setNotes(){
   const ch=P.chords[P.idx],n=[];if(!ch)return;
-  if(!$('rootless').checked)n.push(36+ch.r);
+  n.push(36+ch.r);
   let pv=-1,b9=-1;
-  [...ch.iv].filter(i=>i>0&&!($('fifthless').checked&&i===(ch.iv.includes(6)?6:7))).sort((a,b)=>(a===1?12:a)-(b===1?12:b)).forEach(i=>{let m=60+(ch.r+i)%12;while(m<=pv)m+=12;pv=m;n.push(m);if(i===1)b9=m});
+  [...ch.iv].filter(i=>i>0).sort((a,b)=>(a===1?12:a)-(b===1?12:b)).forEach(i=>{let m=60+(ch.r+i)%12;while(m<=pv)m+=12;pv=m;n.push(m);if(i===1)b9=m});
   P.notes=n.sort((a,b)=>a-b);P.forced=new Set(b9>0?[b9]:[]);
 }
 function check(a){
@@ -461,7 +461,7 @@ function check(a){
   if(!a.length){P.armed=true;return false}
   if(!P.armed)return false;
   const pcs=new Set(a.map(m=>m%12)),all=ch.iv.map(i=>(ch.r+i)%12),fi=ch.iv.includes(6)?6:7,need=all.filter(p=>!($('rootless').checked&&p===ch.r)&&!($('fifthless').checked&&(p-ch.r+12)%12===fi));
-  if(need.every(p=>pcs.has(p))&&[...pcs].every(p=>all.includes(p))){P.armed=false;return advance()}
+  if(need.every(p=>pcs.has(p))){P.armed=false;return advance()}
   return false;
 }
 function advance(){P.ign=new Set(active());
